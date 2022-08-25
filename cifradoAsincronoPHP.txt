@@ -1,0 +1,29 @@
+1- Se utilizo php, xamp y un formulario.
+2- Se debe agregar la configuracion del open ssl de apache a las variables del entorno
+Nombre de la variable: OPENSSL_CONF
+Valor de la variable es la ubicaion del archivo "openssl.cnf" en mi caso: C:\xampp\apache\conf\openssl.cnf
+Guardar y REINICIAR la pc --- IMPORTANTE
+
+//Iniciar keys, se indican los bits.
+$result = openssl_pkey_new(array("private_key_bits" => 4096));
+
+//Generar clave privada
+openssl_pkey_export($result, $privateKey);
+
+//Generar llave publica
+$publicKey = openssl_pkey_get_details($result)['key'];
+
+//Agregamos el mensaje a encriptar, en este caso se obtiene del formulario
+$plaintext = $_POST["mensaje"];
+
+//Encriptamos el mensaje y lo guardamos en $encrypted_text
+openssl_public_encrypt($plaintext,$encrypted_text,$publicKey);
+                        
+//Podemos mostrar el texto encriptado
+echo  $encrypted_text ;
+
+//Se desencripta el mensaje
+openssl_private_decrypt($encrypted_text, $decrypt, $privateKey);
+
+//Podemos mostrar el texto desencriptado
+echo  $decrypt ;
